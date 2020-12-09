@@ -1,6 +1,6 @@
 # Twitchbot Dashboard
 
-A simple dashboard for [Twitchbot](https://github.com/Dilaz/Twitchbot-dashboard).
+A simple dashboard for [Twitchbot](https://github.com/Dilaz/Twitchbot).
 
 ## Frontend
 
