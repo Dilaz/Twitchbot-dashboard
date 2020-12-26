@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    networks:
+    - twitchbot
+    container_name: twitchbot-rabbitmq
+    image: "rabbitmq:3-alpine"
+    restart: always
+    expose:
+    - ${MQ_PORT}
+    ports:
+      - "${MQ_PORT}:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: twitchbot
+      RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD}
+  frontend:
+    build: frontend
+    depends_on:
+    - backend
+    environment:
+      NODE_ENV: production
+      VUE_APP_API_URL: ${VUE_APP_API_URL}
+  backend:
+    networks:
+    - twitchbot
+    build: backend
+    depends_on:
+    - rabbitmq
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      MQ_CHANNEL_NAME: ${MQ_CHANNEL_NAME}
+      SCOPE: ${SCOPE}
+      TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID}
+      TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET}
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      MQ_CHANNEL_NAME: ${MQ_CHANNEL_NAME}
+      MQ_URL: ${MQ_URL}
+    command: sh -c "dockerize -wait tcp://rabbitmq:5672 -timeout 300s -wait-retry-interval 30s node dist/index.js"
+
+networks:
+  twitchbot:
+    driver: bridge
