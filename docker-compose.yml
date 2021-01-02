@@ -15,16 +15,26 @@ services:
       RABBITMQ_DEFAULT_USER: twitchbot
       RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD}
   frontend:
-    build: frontend
+    build:
+      args:
+        VUE_APP_API_URL: ${VUE_APP_API_URL}
+      context: frontend
+    restart: always
     depends_on:
     - backend
-    environment:
-      NODE_ENV: production
-      VUE_APP_API_URL: ${VUE_APP_API_URL}
+    expose:
+    - 31002
+    ports:
+      - "31002:80"
   backend:
     networks:
     - twitchbot
     build: backend
+    restart: always
+    expose:
+    - ${PORT}
+    ports:
+      - "${PORT}:${PORT}"
     depends_on:
     - rabbitmq
     environment:
@@ -38,6 +48,7 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN}
       MQ_CHANNEL_NAME: ${MQ_CHANNEL_NAME}
       MQ_URL: ${MQ_URL}
+      PORT: ${PORT}
     command: sh -c "dockerize -wait tcp://rabbitmq:5672 -timeout 300s -wait-retry-interval 30s node dist/index.js"
 
 networks:
