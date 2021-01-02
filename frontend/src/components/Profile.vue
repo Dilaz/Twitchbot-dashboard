@@ -27,7 +27,7 @@
     </v-col>
 
     <v-col cols="12">
-      <v-snackbar v-model="error" :timeout="5000">
+      <v-snackbar v-model="error" :timeout="15000">
         Somehting went wrong! Try to log out and log back in and if the problem
         continues, contact
         <a href="https://twitter.com/Dilazi" target="_blank" ref="noopener"
@@ -40,7 +40,7 @@
         </template>
       </v-snackbar>
 
-      <v-snackbar v-model="success" :timeout="10000">
+      <v-snackbar v-model="success" :timeout="30000">
         {{ successText }}
         <template v-slot:action="{ attrs }">
           <v-btn color="blue" text v-bind="attrs" @click="success = false">
