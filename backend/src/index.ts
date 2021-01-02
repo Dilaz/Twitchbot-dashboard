@@ -97,7 +97,7 @@ const main = async () => {
 
   app.post('/addBot', passport.authenticate('jwt', { session: false }), async (req, res) => {
     console.log(req.user['user']['data']);
-    const channelName = req.user['user']['data'][0]['login'];
+    const channelName = `#${req.user['user']['data'][0]['login']}`;
 
     if (!channelName) {
       return res.status(480).json({ status: 'error', message: 'Invalid channel name' });
@@ -119,7 +119,7 @@ const main = async () => {
   });
 
   app.post('/removeBot', passport.authenticate('jwt', { session: false }), (req, res) => {
-    const channelName = req.user['user']['data'][0]['login'];
+    const channelName = `#${req.user['user']['data'][0]['login']}`;
 
     if (!channelName) {
       return res.status(480).json({ status: 'error', message: 'Invalid channel name' });
